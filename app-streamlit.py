@@ -15,7 +15,8 @@ from agent.main_logic import (
 from agent.tools import restaurant_tools
 from agent.prompts import (
     restaurant_test_conversation_system_prompt,
-    restaurant_test_conversation_system_prompt_w_fewshot
+    restaurant_test_conversation_system_prompt_w_fewshot,
+    restaurant_test_conversation_system_prompt_w_fewshot_1
 )
 
 # Setting up Logging
@@ -51,7 +52,7 @@ st.title("FoodieSpot Reservation Assistant")
 st.subheader("Book tables at our restaurants across Bangalore")
 
 # Initialize chat settings
-system_prompt = restaurant_test_conversation_system_prompt_w_fewshot
+system_prompt = restaurant_test_conversation_system_prompt_w_fewshot_1
 first_message = "Hello! I'm here to help with your reservation at FoodieSpot in Bangalore. You can ask me for recommendations of restaurants or book a table at your preferred location."
 
 # Session state initialization

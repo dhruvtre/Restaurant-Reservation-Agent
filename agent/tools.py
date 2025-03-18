@@ -17,11 +17,41 @@ restaurant_tools: List[Dict[str, Union[str, Dict[str, Union[str, Dict[str, Union
         "function": {
             "name": "search_restaurant_information",
             "description": (
-                "Search for restaurants based on a flexible set of query parameters. "
-                "The input is a JSON object that may include any of the restaurant information fields based on the information shared by the user."
-                "These fields strictly only include 'name', 'location', 'cuisine', 'operating_hours', 'phone', 'restaurant_max_seating_capacity', 'max_booking_party_size'"
-                "and 'operating_days'. The function returns a list of restaurants that match the given criteria. "
-                "Empty searches return a list of all restaurants."
+                '''
+                "Search for restaurants based on user-provided criteria. Use any specific information the user mentions to find the best matches.
+
+                Core Function:
+                - Returns matching restaurants sorted by relevance
+                - When specific criteria are mentioned, uses them to find the best matches
+                - Without specific criteria, returns top 10 recommended restaurants
+                - All searches return complete restaurant details including restaurant_id
+
+                Valid Parameters:
+                - name: Restaurant name as mentioned by user
+                - location: Areas or landmarks user mentions (e.g., 'Koramangala', 'MG Road')
+                - cuisine: Common cuisine types (Indian, Italian, Mediterranean, Asian, Continental, American)
+                - operating_hours: Time in HH:MM format
+                - operating_days: Days of operation
+                - restaurant_max_seating_capacity: Total capacity (30-120) - useful when discussing venue size or large groups
+                - max_booking_party_size: Group size limits (6-20) - relevant for booking discussions
+
+                Usage Guidelines:
+                1. Search Approach:
+                - Use any specific details the user mentions
+                - Perform focused searches with clear criteria
+                - Only use empty search when user gives no specific preferences
+
+                2. Parameter Best Practices:
+                - Include all relevant details mentioned by user
+                - Use terms as mentioned by user
+                - When user mentions group size or capacity needs, use appropriate capacity parameters
+
+                3. Capacity Context:
+                - restaurant_max_seating_capacity helps find venues suitable for larger gatherings
+                - max_booking_party_size helps match restaurants to specific group booking needs
+
+                The function returns matching restaurants with all details needed for reservations."
+                '''
             ),
             "parameters": {
                 "type": "object",
@@ -80,12 +110,36 @@ restaurant_tools: List[Dict[str, Union[str, Dict[str, Union[str, Dict[str, Union
         "function": {
             "name": "make_new_order",
             "description": (
-                        "This is a tool to confirm a new order in the restaurant order management system."
-                        "Only call this tool when you have the following information from the user: Name, Phone Number, Party Size, Restaurant Preference, Reservation Day and Reservation time."
-                        "Review all collected information with the user before calling this tool."
-                        "Do not call this function with assumed or hallucinated values. "
-                        "All parameters must be explicitly provided by the user through conversation. "
-                        "The function will check capacity before confirming - reservations exceeding restaurant capacity will be rejected."
+                        '''
+                        "Tool to confirm restaurant reservations. Use after naturally collecting all booking details through conversation.
+
+                        Required Information:
+                        - restaurant_id: From your restaurant search results
+                        - orderer_name: Customer's actual name (collect naturally in conversation)
+                        - orderer_contact: Valid phone number
+                        - party_size: Number of guests (must fit restaurant's capacity)
+                        - reservation_date: Convert any date format user provides to YYYY-MM-DD
+                        - reservation_time: Convert user's preferred time to HH:MM (24-hour)
+
+                        Before Confirming:
+                        1. Ensure you have all needed details from natural conversation
+                        2. Handle all date/time conversions (tomorrow, next week, evening, etc.)
+                        3. Verify party size works for the restaurant
+                        4. Review complete booking details with customer
+
+                        Response Types:
+                        - Successful Booking: Share confirmation details
+                        - Capacity Issues: Help find alternatives (different time/restaurant)
+                        - Missing Details: Continue conversation to collect information
+                        - Invalid Information: Clarify and correct through conversation
+
+                        Important:
+                        - Collect information naturally through conversation
+                        - Convert dates and times internally without asking user for specific formats
+                        - Always confirm complete booking details before finalizing
+                        - Never guess or assume any details
+                        - Don't proceed if party size exceeds restaurant capacity"
+                        '''
             ),
             "parameters": {
                 "type": "object",

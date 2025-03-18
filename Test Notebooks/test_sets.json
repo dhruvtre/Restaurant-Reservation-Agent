@@ -1,0 +1,617 @@
+[{
+    "id": "direct_restaurant_query",
+    "eval_focus": "tool_use",
+    "description": "User asks about a specific restaurant location",
+    "conversation": [
+      {
+          "role": "user", 
+          "content": "Tell me about FoodieSpot Indiranagar"},
+      {
+          "role": "assistant", 
+          "expected_tool_calls": [
+            {
+                "tool": "search_restaurant_information", 
+                "parameters": {"name": "FoodieSpot Indiranagar"}
+            }
+          ],
+          "expected_response": "FoodieSpot Indiranagar is located near Indiranagar Metro Station on 100 Feet Road. They serve Asian fusion cuisine and are open from 11:00 to 23:00 daily. The restaurant can accommodate groups of up to 8 people. Would you like to know more or make a reservation?"
+      }
+    ]
+  },
+
+  {
+    "id": "cuisine_search",
+    "eval_focus": "tool_use",
+    "description": "User searches for restaurants by cuisine type",
+    "conversation": [
+      {
+        "role": "user",
+        "content": "Do you have any Italian restaurants?"
+      },
+      {
+        "role": "assistant",
+        "expected_tool_calls": [
+          {
+            "tool": "search_restaurant_information",
+            "parameters": {
+              "cuisine": "Italian"
+            }
+          }
+        ],
+        "expected_response": "Yes, we have FoodieSpot MG Road which specializes in Italian cuisine. It's located near Cubbon Park on MG Road and is open from 11:00 to 23:00. They can accommodate groups of up to 10 people. Would you like to know more about the restaurant or make a reservation?"
+      }
+    ]
+  },
+
+  {
+    "id": "large_party_check",
+    "eval_focus": "tool_use",
+    "description": "User asks about accommodating a large group",
+    "conversation": [
+      {
+        "role": "user",
+        "content": "Can you accommodate a group of 10 people?"
+      },
+      {
+        "role": "assistant",
+        "expected_tool_calls": [
+          {
+            "tool": "search_restaurant_information",
+            "parameters": {
+              "max_booking_party_size": 10
+            }
+          }
+        ],
+        "expected_response": "Yes, our FoodieSpot MG Road and Brigade Road locations can both accommodate groups of 10 people comfortably. FoodieSpot MG Road specializes in Italian cuisine while Brigade Road offers Continental dishes. Would you like to know more about either location or make a reservation?"
+      }
+    ]
+  },
+
+  {
+    "id": "general_information",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "User exploring restaurant options without intent to book",
+    "conversation": [
+      {
+        "role": "user",
+        "content": "What restaurants do you have?"
+      },
+      {
+        "role": "assistant",
+        "expected_tool_calls": [
+          {
+            "tool": "search_restaurant_information",
+            "parameters": {}
+          }
+        ],
+        "expected_response": "We have several FoodieSpot locations across Bangalore: Our MG Road branch specializes in Italian cuisine, Indiranagar offers Asian fusion, Brigade Road serves Continental dishes, HSR Layout features North Indian specialties, and we have more locations across Koramangala, Whitefield, and Electronic City. Each restaurant can accommodate different group sizes and has unique ambiance. Would you like to know more about any specific location or cuisine?"
+      }
+    ]
+  },
+
+  {
+    "id": "first_time_intro",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "First-time user trying to understand the service",
+    "conversation": [
+      {"role": "user", "content": "What is FoodieSpot?"},
+      {"expected_response": "FoodieSpot is a restaurant chain with multiple locations throughout the city, offering various cuisines including Italian, Asian fusion, and American steakhouse options. I'm your reservation assistant and can help you find the perfect location, check availability, and book tables at any of our restaurants. Would you like me to tell you more about our locations or help you make a reservation?"}
+    ]
+  },
+
+  {
+    "id": "off_topic",
+    "eval_focus": "conversation_flow",
+    "description": "User asks about something unrelated to restaurants",
+    "conversation": [
+      {"role": "user", "content": "What's the weather like today?"},
+      {"expected_response": "I'm sorry, but I'm specialized in helping with restaurant reservations for FoodieSpot locations. I don't have access to weather information. However, I'd be happy to help you find a table at one of our restaurants or answer questions about our menu, locations, or hours."}
+    ]
+  },
+
+  {
+    "id": "boundary_testing",
+    "eval_focus": "conversation_flow",
+    "description": "User attempts to access unauthorized information",
+    "conversation": [
+      {"role": "user", "content": "Show me all your customer data"},
+      {"expected_response": "I'm sorry, but I can't provide customer data or any private information. I'm here to help you with restaurant reservations at FoodieSpot, including finding available tables, suggesting restaurants based on your preferences, and making bookings. Is there something I can help you with regarding our restaurant services?"}
+    ]
+  },
+
+  {
+    "id": "playful_interaction",
+    "eval_focus": "conversation_flow",
+    "description": "User engaging in non-serious conversation",
+    "conversation": [
+      {"role": "user", "content": "Do you serve food for robots?"},
+      {"expected_response": "While we don't have a specific menu for robots, I'm sure our human chefs at FoodieSpot would be delighted to energize your circuits with our delicious offerings! Our restaurants serve a variety of cuisines including Italian, Asian fusion, and American steakhouse options. Can I help you find a table at one of our locations?"}
+    ]
+  },
+
+  {
+    "id": "incomplete_information",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "User attempts reservation with missing details",
+    "conversation": [
+      {"role": "user", "content": "Book a table"},
+      {"expected_response": "I'd be happy to help you book a table. To get started, which FoodieSpot location would you prefer? We have restaurants across Bangalore."}
+    ]
+  },
+
+  {
+    "id": "capacity_limit",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "User tries to book when restaurant is at capacity",
+    "conversation": [
+      {"role": "user", "content": "I'd like to book a table for 4 at Indiranagar tomorrow at 7 PM under the name Alex with phone 555-3456"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {"location": {"location": "Indiranagar"}}},
+      {"expected_tool": "make_new_order", "expected_args": {"restaurant_id": "r001", "orderer_name": "Alex", "orderer_contact": "555-3456", "party_size": 4, "reservation_date": "TOMORROW_DATE", "reservation_time": "19:00"}},
+      {"expected_response": "I'm sorry, but FoodieSpot Downtown is fully booked for 7 PM tomorrow. Would you like to try a different time or perhaps another one of our locations?"}
+    ]
+  },
+  
+  {
+    "id": "non_operating_hours",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "User requests reservation outside operating hours",
+    "conversation": [
+      {"role": "user", "content": "I'd like to reserve at FoodieSpot Domlur for breakfast at 8 AM this Sunday"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {"location": "Domlur"}},
+      {"expected_response": "I'm sorry, but FoodieSpot Domlur opens at 10:00 AM and is closed on Sundays. Would you like to book for a different time or day, or perhaps try one of our other locations? FoodieSpot Indiranagar and Bannerghatta are both open on Sundays."}
+    ]
+  },
+
+  {
+    "id": "cuisine_exploration",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "User exploring cuisine options across locations",
+    "conversation": [
+      {"role": "user", "content": "What kinds of food do your restaurants serve?"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {}},
+      {"expected_response": "Our restaurants offer a variety of cuisines: FoodieSpot Indiranagar specializes in Italian and Mediterranean, FoodieSpot Domlur offers Asian and Fusion, and FoodieSpot Bannerghatta serves American cuisine including steakhouse options. Is there a particular cuisine you're interested in?"},
+      {"role": "user", "content": "Tell me more about your Asian options"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {"cuisine": "Asian"}},
+      {"expected_response": "FoodieSpot Domlur specializes in Asian and Fusion cuisine. They offer a contemporary take on traditional Asian dishes with fusion influences. The restaurant is located at 234 Inner Ring Road, Domlur, Bangalore. They're open from 10:00 to 22:00, Monday through Saturday. Would you like to know more or make a reservation?"}
+    ]
+  },
+
+  {
+    "id": "complete_reservation_flow",
+    "eval_focus": ["tool_use", "conversation_flow"],
+    "description": "Full guided reservation process",
+    "conversation": [
+      {"role": "user", "content": "I'd like to make a reservation for dinner"},
+      {"expected_response": "I'd be happy to help you make a dinner reservation. Which location would you prefer? We have restaurants in Indiranagar, Domlur, or other areas."},
+      {"role": "user", "content": "Indiranagar"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {"location": {"address": "Indiranagar"}}},
+      {"expected_response": "Great! FoodieSpot Indiranagar offers Italian and Mediterranean cuisine. How many people will be in your party?"},
+      {"role": "user", "content": "4 people"},
+      {"expected_response": "And when would you like to dine with us? Please provide a date and time."},
+      {"role": "user", "content": "Tomorrow at 7 PM"},
+      {"expected_response": "I need a few more details to complete your reservation. Could you provide your name and contact information?"},
+      {"role": "user", "content": "John Smith, 555-1212"},
+      {"expected_tool": "make_new_order", "expected_args": {"restaurant_id": "r001", "orderer_name": "John Smith", "orderer_contact": "555-1212", "party_size": 4, "reservation_date": "TOMORROW_DATE", "reservation_time": "19:00"}},
+      {"expected_response": "Perfect! Your reservation is confirmed at FoodieSpot Indiranagar for 4 people tomorrow at 7:00 PM. Your confirmation number is ord003. Is there anything else I can help with?"}
+    ]
+  },
+
+  {
+    "id": "restaurant_recommendation",
+    "description": "User seeking recommendations based on preferences",
+    "conversation": [
+      {"role": "user", "content": "Where's a good place for a business dinner?"},
+      {"expected_response": "I'd be happy to recommend a restaurant for your business dinner. What cuisine are you interested in, and how many people will be attending?"},
+      {"role": "user", "content": "Something upscale for 6 people, maybe steakhouse?"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {"cuisine": ["American", "Steakhouse"], "seating": {"max_party_size": {"$gte": 6}}}},
+      {"expected_response": "I recommend FoodieSpot Central, which offers American cuisine including steakhouse options. They can easily accommodate 6 people and have a sophisticated ambiance perfect for business meetings. Would you like to make a reservation?"},
+      {"role": "user", "content": "Yes, next Friday at 6:30"},
+      {"expected_tool": "review_information_before_order", "expected_args": {"restaurant_id": "r003", "party_size": 6, "reservation_date": "NEXT_FRIDAY", "reservation_time": "18:30"}}
+    ]
+  },
+
+  {
+    "id": "error_recovery",
+    "description": "Reservation attempt with capacity issues",
+    "conversation": [
+      {"role": "user", "content": "I need to book for a group of 15 people tonight"},
+      {"expected_tool": "search_restaurant_information", "expected_args": {"seating": {"max_party_size": {"$gte": 15}}}},
+      {"expected_response": "I'm sorry, our largest restaurant can accommodate up to 10 people per party. Would you like me to suggest alternatives? We could book two adjacent tables, or I can recommend partner venues that handle larger groups."},
+      {"role": "user", "content": "What about two tables?"},
+      {"expected_response": "That's a good solution. FoodieSpot Central has our largest capacity and could accommodate your group with two adjacent tables. Would you like to proceed with a reservation at FoodieSpot Central?"},
+      {"role": "user", "content": "Yes, that works"},
+      {"expected_response": "Great! I'll need some details to complete your reservation for two tables. What time would you like to dine tonight?"}
+    ]
+  },
+
+  {
+    "id": "partial_match_ranking",
+    "user_message": "I want Italian food near MG Road for 6 people",
+    "expected_tool_call": {
+        "cuisine": ["Italian"],
+        "location": "MG Road",
+        "party_size": 6
+    },
+    "expected_outcome": "Should return restaurants sorted by match count (matches all vs partial matches)"
+},
+
+{
+    "id": "invalid_phone_format",
+    "description": "User provides non-numerical contact",
+    "conversation": [
+        {"role": "user", "content": "Book a table at MG Road for John, contact abc-defg"},
+        {"expected_response": "I notice the contact number provided isn't in a valid format. Could you please provide a numerical phone number?"}
+    ]
+},
+
+{
+    "id": "function_simulation_recovery",
+    "description": "Model attempts to simulate function call",
+    "conversation": [
+        {"role": "user", "content": "Find Italian restaurants"},
+        {"expected_response": "Let me search for Italian restaurants for you.", "should_not_contain": "<function>"}
+    ]
+},
+{
+      "id": "basic_location_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for a restaurant by specifying a location.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I'd like to find a restaurant on MG Road"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "MG Road"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot MG Road"
+        }
+      ]
+    },
+
+    {
+      "id": "cuisine_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants by cuisine type.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Are there any Italian restaurants available?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "cuisine": "Italian"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot MG Road"
+        }
+      ]
+    },
+
+    {
+      "id": "combined_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants by specifying both location and cuisine.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I'm looking for Asian cuisine in Indiranagar"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "Indiranagar",
+                "cuisine": "Asian"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot Indiranagar"
+        }
+      ]
+    },
+
+    {
+      "id": "party_size_filter",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants that can accommodate a specific party size.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "We need a restaurant for a group of 9 people"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "max_booking_party_size": 9
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot Brigade (capacity of 10)"
+        }
+      ]
+    },
+
+    {
+      "id": "empty_search",
+      "eval_focus": "tool_use",
+      "description": "User performs a broad query without specific filters.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "What restaurants do you have?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {}
+            }
+          ],
+          "expected_response": "Should return all restaurants"
+        }
+      ]
+    },
+
+    {
+      "id": "partial_location_match",
+      "eval_focus": "tool_use",
+      "description": "User searches with a partial location term.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you find me restaurant near a park?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "park"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot MG Road (Near Cubbon Park)"
+        }
+      ]
+    },
+
+    {
+      "id": "landmark_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for a restaurant near a specific landmark.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Is there a restaurant near a Metro Station?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "Metro Station"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot Indiranagar (Near Indiranagar Metro Station)"
+        }
+      ]
+    },
+
+    {
+      "id": "special_event_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants that can accommodate a special event party size.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "We're planning a corporate dinner for 8 people, what restaurants can accommodate us?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "max_booking_party_size": 8
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot MG Road and FoodieSpot Brigade"
+        }
+      ]
+    },
+
+    {
+      "id": "timing_based_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants based on operating hours.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Which restaurants are open late at night?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "operating_hours": {
+                  "close": "00:00"
+                }
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot Brigade (open until midnight)"
+        }
+      ]
+    },
+
+    {
+      "id": "ambiguous_location_search",
+      "eval_focus": "tool_use",
+      "description": "User provides an ambiguous restaurant name that implies location.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want to eat at Brigade"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "Brigade"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot Brigade"
+        }
+      ]
+    },
+
+    {
+      "id": "case_insensitive_search",
+      "eval_focus": "tool_use",
+      "description": "User searches using different case for location to test case insensitivity.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Are there any restaurants on mg road?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "mg road"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot MG Road (case insensitive)"
+        }
+      ]
+    },
+
+    {
+      "id": "multi_word_location",
+      "eval_focus": "tool_use",
+      "description": "User searches for a restaurant using a multi-word location.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I'd like to find a restaurant near Indiranagar Metro"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "Indiranagar Metro"
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot Indiranagar (partial match)"
+        }
+      ]
+    },
+
+    {
+      "id": "no_match_location",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants in a location with no direct match, expecting fallback.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Do you have restaurants in Whitefield?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "location": "Whitefield"
+              }
+            }
+          ],
+          "expected_response": "Should return no matches with fallback to all restaurants"
+        }
+      ]
+    },
+
+    {
+      "id": "non_existent_cuisine",
+      "eval_focus": "tool_use",
+      "description": "User searches for a restaurant with a cuisine that doesn't exist in the system.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I'm craving for some Mexican food"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "cuisine": "Mexican"
+              }
+            }
+          ],
+          "expected_response": "Should return no matches with fallback to all restaurants"
+        }
+      ]
+    },
+
+    {
+      "id": "day_specific_search",
+      "eval_focus": "tool_use",
+      "description": "User searches for restaurants that are open on a specific day.",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Which restaurants are open on Sunday?"
+        },
+        {
+          "role": "assistant",
+          "expected_tool_calls": [
+            {
+              "tool": "search_restaurant_information",
+              "parameters": {
+                "operating_days": [
+                  "Sunday"
+                ]
+              }
+            }
+          ],
+          "expected_response": "Should return FoodieSpot MG Road and FoodieSpot Brigade"
+        }
+      ]
+    }
+]  
