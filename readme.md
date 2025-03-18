@@ -62,3 +62,12 @@ Future Enhancements: Integrate live chat handoff and SMS notifications to recove
 - Basic phone number validation
 
 Future Enhancements: Build reservation management (edit/cancel) and semantic search capabilities to match industry standards, improving user retention and reducing support costs.
+
+## Known Common Errors
+
+- Hallucinating search parameters: "bangalore" added to searches for specific cuisines leading to all results. Will be addressed with better matching, can be fixed with better prompting.
+- Unable to process inexact matches: "park" not matching with "cubbon park" leading to limited matches. Can be fixed with fuzzy matching and semantic search.
+- Chat tone and messaging: Agent reporting that search query was empty to the user before sharing the results. Can be fixed with better prompting and few-shot examples.
+- Lack of external date and time validation: Even though date is in system prompts, better to implement explicit validation. Smarter models are likely to handle this better.
+- Unnecessary tool usage: Even for general questions like "what is foodiespot". This can be addressed with better prompting, few-shot examples, smarter models, and inline checks to determine if tool calls are necessary.
+- Function statement leakage: This has been addressed with guardrails that check for function calls in text responses.
