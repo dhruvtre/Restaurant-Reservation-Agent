@@ -3,29 +3,16 @@
 ## Project Overview
 FoodieSpot Reservation System is a conversational AI solution that enables restaurant chains to automate table bookings across multiple locations. It helps customers discover restaurants based on cuisine and location preferences, then guides them through the reservation process with progressive information collection.
 
-## Setup instructions
+## Setup Instructions
 1. Clone the repository
 2. Install requirements: pip install -r requirements.txt
 3. Update restaurant_list.json with your data
 4. Run python launcher.py to start both API and frontend
 
-## Documentation of your prompt engineering approach
-1. Identified core user intents through brainstorming
-2. Created 30-message evaluation set and ideal conversation flows
-3. Developed baseline prompt with tool definitions
-4. Analyzed failure modes through testing
-5. Enhanced prompt with few-shot examples for specific cases
-
-## Example conversations showing different user journeys
-![FoodieSpot Conversation Examples](Test Notebooks/sample_conversations.png)
-
-## Business strategy summary
-- ![Link to Notion Usecase Document](https://dhruvtrehan.notion.site/Use-case-Template-for-Assignment-190c1206c09280098266d45261076215?pvs=4)
-
 ## Current Technical Implementation 
 - LLM Integration: Meta-Llama-3.1-8B-Instruct-Turbo via Together AI API
 - Tool Calling: Enabled by Together AI API on LLM side, with FastAPI backend and RESTful endpoints
-- Inline Guardrails: Checks for function call in text (e.g. "<function>...</function>)
+- Inline Guardrails: Checks for function call in text (e.g '''\<function>...\</function>\''')
 - Frontend: Streamlit-based conversational interface
 - Restaurant and Reservation Data: Managed as JSON-based files for the prototype
 - Restaurant Recommendation: Key specific phrase match and ranking based Search function
@@ -33,6 +20,18 @@ FoodieSpot Reservation System is a conversational AI solution that enables resta
 - Launcher Script: Run with a unified launcher script with API dependency checking
 - Evals and Error Handling: Evaluated over 30 samples, and error handling with appropriate HTTP status codes
 
+## Documentation of Prompt Engineering Approach
+1. Identified core user intents through brainstorming
+2. Created 30-message evaluation set and ideal conversation flows
+3. Developed baseline prompt with tool definitions
+4. Analyzed failure modes through testing
+5. Enhanced prompt with few-shot examples for specific cases
+
+## Example Conversations w/ Multiple User Journeys
+![Sample Conversations.png](https://github.com/dhruvtre/restaurant_reservation_agent/blob/000c959731e38a6eab25034393f6d4a83a826bb3/Test%20Notebooks/sample_conversations.png)
+
+## Business impact summary
+[Link to Notion Usecase Document](https://dhruvtrehan.notion.site/Use-case-Template-for-Assignment-190c1206c09280098266d45261076215?pvs=4)
 
 ## Assumptions, Limitations and Future Enhancements
 
