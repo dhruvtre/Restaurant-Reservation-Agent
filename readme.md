@@ -20,6 +20,9 @@ FoodieSpot Reservation System is a conversational AI solution that enables resta
 - Launcher Script: Run with a unified launcher script with API dependency checking
 - Evals and Error Handling: Evaluated over 30 samples, and error handling with appropriate HTTP status codes
 
+## System Diagram
+<img width="682" alt="Screenshot 2025-03-19 at 8 35 19 PM" src="https://github.com/user-attachments/assets/d6b8fd91-0a84-4769-9bce-c311a358e136" />
+
 ## Documentation of Prompt Engineering Approach
 1. Identified core user intents through brainstorming
 2. Created 30-message evaluation set and ideal conversation flows
